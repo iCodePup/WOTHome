@@ -1,10 +1,10 @@
-package com.glg204.wothome.authentification.controller;
+package com.glg204.wothome.user.controller;
 
-import com.glg204.wothome.authentification.domain.WOTUser;
 import com.glg204.wothome.authentification.dto.AuthDTO;
-import com.glg204.wothome.authentification.dto.LoginDTO;
 import com.glg204.wothome.authentification.dto.WOTUserDTO;
-import com.glg204.wothome.authentification.service.WOTUserService;
+import com.glg204.wothome.authentification.exception.EmailAlreadyExistsException;
+import com.glg204.wothome.user.dto.UserDTO;
+import com.glg204.wothome.user.service.UserService;
 import com.glg204.wothome.config.TokenProvider;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,39 +13,49 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 
 @RestController()
-@RequestMapping("/auth/")
-public class IdentificationController {
+@RequestMapping("/user/create")
+public class RegistrationController {
 
     @Autowired
-    private WOTUserService wotUserService;
+    private UserService userService;
 
     @Autowired
     private AuthenticationManager authenticationManager;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private TokenProvider tokenProvider;
 
-    @PostMapping("/login")
-    public ResponseEntity<AuthDTO> login(@Valid @RequestBody LoginDTO loginDTO) {
+    @PostMapping()
+    public ResponseEntity<AuthDTO> createAccount(@Valid @RequestBody UserDTO userDTO) {
 
-        String token = authenticateAndGetToken(loginDTO.getEmail(), loginDTO.getPassword());
-        Optional<WOTUser> wotUserOptional = wotUserService.getUserByUsername(loginDTO.getEmail());
-        return wotUserOptional.map(wotUser -> {
-                    WOTUserDTO wotUserDTO = new WOTUserDTO(wotUser.getEmail(), wotUser.getFirstName(), wotUser.getLastName(), wotUser.getRole().name());
-                    AuthDTO registeredDTO = new AuthDTO(wotUserDTO, token);
-                    return ResponseEntity.ok(registeredDTO);
-                }
-        ).orElseGet(() -> ResponseEntity.status(HttpStatus.UNAUTHORIZED).build());
+        try {
+            userService.save(passwordEncoder, userDTO);
+            String token = authenticateAndGetToken(userDTO.getEmail(), userDTO.getPassword());
+            WOTUserDTO registeredClientDTO =
+                    new WOTUserDTO(
+                            userDTO.getEmail(),
+                            userDTO.getFirstName(),
+                            userDTO.getLastName(),
+                            "CLIENT");
+            AuthDTO registeredDTO = new AuthDTO(registeredClientDTO, token);
+            return ResponseEntity.ok(registeredDTO);
+        } catch (EmailAlreadyExistsException e) {
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(null);
+        }
     }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -65,13 +75,5 @@ public class IdentificationController {
     private String authenticateAndGetToken(String username, String password) {
         Authentication authentication = authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, password));
         return tokenProvider.generate(authentication);
-    }
-
-    @GetMapping("/me")
-    public ResponseEntity<WOTUserDTO> identification(Principal p) {
-        Optional<WOTUser> wotUserOptional = wotUserService.getUserByUsername(p.getName());
-        return wotUserOptional.map(wotUser ->
-                ResponseEntity.ok(new WOTUserDTO(wotUser.getEmail(), wotUser.getFirstName(), wotUser.getLastName(), wotUser.getRole().name()))
-        ).orElseGet(() -> ResponseEntity.ok(null));
     }
 }
