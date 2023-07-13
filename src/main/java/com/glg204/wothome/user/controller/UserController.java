@@ -2,6 +2,7 @@ package com.glg204.wothome.user.controller;
 
 import com.glg204.wothome.user.dto.UserDTO;
 import com.glg204.wothome.user.service.UserService;
+import com.glg204.wothome.webofthings.dto.ThingDTO;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -21,6 +22,13 @@ public class UserController {
 
     @Autowired
     private UserService userService;
+
+    @GetMapping("/thing")
+    public ResponseEntity<List<ThingDTO>> getUserThings(Principal p) {
+        List<ThingDTO> thingDTOList = userService.getUserThings(p);
+        return ResponseEntity.ok(thingDTOList);
+    }
+
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

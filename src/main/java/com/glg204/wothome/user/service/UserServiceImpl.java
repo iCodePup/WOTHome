@@ -6,6 +6,9 @@ import com.glg204.wothome.authentification.service.WOTUserService;
 import com.glg204.wothome.user.dao.UserDAO;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.user.dto.UserDTO;
+import com.glg204.wothome.webofthings.dao.ThingDAO;
+import com.glg204.wothome.webofthings.dto.ThingDTO;
+import com.glg204.wothome.webofthings.service.ThingDTOMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +33,12 @@ public class UserServiceImpl implements UserService {
     UserDAO userDAO;
 
     @Autowired
+    ThingDAO thingDAO;
+
+    @Autowired
+    ThingDTOMapper thingDTOMapper;
+
+    @Autowired
     UserDTOMapper clientDTOMapper;
 
     @Override
@@ -37,10 +46,16 @@ public class UserServiceImpl implements UserService {
         if (wotUserService.existsByEmail(userDTO.getEmail())) {
             throw new EmailAlreadyExistsException();
         } else {
-
             WOTUser wotUser = wotUserService.save(passwordEncoder, userDTO);
             // Creates the corresponding user.
             return userDAO.save(clientDTOMapper.fromCreationDTO(userDTO, wotUser));
         }
+    }
+
+    @Override
+    public List<ThingDTO> getUserThings(Principal p) {
+        Optional<User> user = userDAO.getUserByEmail(p.getName());
+        return user.map(value -> thingDAO.getUserThings(value).stream()
+                .map(thing -> thingDTOMapper.toDTO(thing)).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
 }

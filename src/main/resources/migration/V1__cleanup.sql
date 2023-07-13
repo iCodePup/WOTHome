@@ -1,4 +1,0 @@
--- Cleanup
--- DELETE FROM user;
--- DELETE FROM wot_user;
--- DELETE FROM thing;

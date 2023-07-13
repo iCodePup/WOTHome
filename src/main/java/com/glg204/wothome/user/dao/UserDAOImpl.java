@@ -31,7 +31,7 @@ public class UserDAOImpl implements UserDAO {
 
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
-                    .prepareStatement("insert into user (email,telephone,address) values(?,?,?)", new String[]{"id"});
+                    .prepareStatement("insert into enduser (email,telephone,address) values(?,?,?)", new String[]{"id"});
             ps.setString(1, user.getWotUser().getEmail());
             ps.setString(2, user.getTelephone());
             ps.setString(3, user.getAddress());
@@ -43,7 +43,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public List<Optional<User>> getUsers() {
-        String sqlGetThing = "select * from user";
+        String sqlGetThing = "select * from enduser";
         try {
             return jdbcTemplate.queryForList(sqlGetThing).stream().map(row -> {
                 return wotUserDAO.findByEmail(String.valueOf(row.get("email"))).map(wtUser -> {
@@ -65,7 +65,7 @@ public class UserDAOImpl implements UserDAO {
     @Override
     public Optional<User> getUserByEmail(String email) {
         try {
-            return jdbcTemplate.queryForObject("select * from user where email = ?", new Object[]{email}, (rs, rowNum) -> {
+            return jdbcTemplate.queryForObject("select * from enduser where email = ?", new Object[]{email}, (rs, rowNum) -> {
                 Optional<WOTUser> wotUser = wotUserDAO.findByEmail(String.valueOf(rs.getString("email")));
                 if (wotUser.isPresent()) {
                     User c = new User(

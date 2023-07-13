@@ -30,9 +30,6 @@ public class UserDetailsServiceImpl implements UserDetailsService {
                 .password(user.getPassword());
         HashSet<String> roles = new HashSet<>();
         switch (user.getRole()) {
-            case ADMIN:
-                roles.add("ADMIN");
-                break;
             case CLIENT:
                 roles.add("CLIENT");
             default:
