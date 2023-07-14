@@ -7,25 +7,35 @@ public class Thing {
 
     private Long id;
 
-    private String type;
+    private String name;
 
-    private String title;
+    private String url;
 
-    private String description;
-
-    private Integer port;
+    private Boolean alive;
 
     private User user;
 
     public Thing() {
     }
 
-    public Thing(Long id, String type, String title, String description, Integer port, User user) {
+    public Thing(String name, String url, Boolean alive) {
+        this.name = name;
+        this.url = url;
+        this.alive = alive;
+    }
+
+    public Thing(Long id, String name, String url, Boolean alive) {
         this.id = id;
-        this.type = type;
-        this.title = title;
-        this.description = description;
-        this.port = port;
+        this.name = name;
+        this.url = url;
+        this.alive = alive;
+    }
+
+    public Thing(Long id, String name, String url, Boolean alive, User user) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.alive = alive;
         this.user = user;
     }
 
@@ -37,36 +47,20 @@ public class Thing {
         this.id = id;
     }
 
-    public String getType() {
-        return type;
+    public String getName() {
+        return name;
     }
 
-    public void setType(String type) {
-        this.type = type;
+    public void setName(String name) {
+        this.name = name;
     }
 
-    public String getTitle() {
-        return title;
+    public String getUrl() {
+        return url;
     }
 
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getDescription() {
-        return description;
-    }
-
-    public void setDescription(String description) {
-        this.description = description;
-    }
-
-    public Integer getPort() {
-        return port;
-    }
-
-    public void setPort(Integer port) {
-        this.port = port;
+    public void setUrl(String url) {
+        this.url = url;
     }
 
     public User getUser() {
@@ -75,5 +69,13 @@ public class Thing {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public Boolean getAlive() {
+        return alive;
+    }
+
+    public void setAlive(Boolean alive) {
+        this.alive = alive;
     }
 }
