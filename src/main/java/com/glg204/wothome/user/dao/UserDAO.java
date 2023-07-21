@@ -16,4 +16,5 @@ public interface UserDAO {
 
     Optional<User> getById(long clientid);
 
+    boolean setUserToThing(Long thingId, Long userId);
 }

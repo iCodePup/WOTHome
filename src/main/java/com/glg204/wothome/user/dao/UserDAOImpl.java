@@ -104,4 +104,11 @@ public class UserDAOImpl implements UserDAO {
             return Optional.empty();
         }
     }
+
+    @Override
+    public boolean setUserToThing(Long thingId, Long userId) {
+        String sql = "UPDATE thing SET enduserid = ? WHERE id = ?";
+        Object[] args = new Object[]{userId, thingId};
+        return jdbcTemplate.update(sql, args) == 1;
+    }
 }

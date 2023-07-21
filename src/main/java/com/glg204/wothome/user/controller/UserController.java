@@ -1,6 +1,5 @@
 package com.glg204.wothome.user.controller;
 
-import com.glg204.wothome.user.dto.UserDTO;
 import com.glg204.wothome.user.service.UserService;
 import com.glg204.wothome.webofthings.dto.ThingDTO;
 import jakarta.validation.Valid;
@@ -29,6 +28,14 @@ public class UserController {
         return ResponseEntity.ok(thingDTOList);
     }
 
+    @PostMapping("/thing")
+    public ResponseEntity<String> purchaseThingInStore(@Valid @RequestBody ThingDTO thingDTO, Principal p) {
+        if (userService.addThingToUser(p, thingDTO.getId())) {
+            return ResponseEntity.ok("Objet connecté ajouté");
+        } else {
+            return ResponseEntity.internalServerError().build();
+        }
+    }
 
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     @ExceptionHandler(MethodArgumentNotValidException.class)

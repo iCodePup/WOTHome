@@ -19,4 +19,6 @@ public interface UserService {
     public Integer save(PasswordEncoder passwordEncoder, @Valid UserDTO userDTO) throws EmailAlreadyExistsException;
 
     List<ThingDTO> getUserThings(Principal p);
+
+    boolean addThingToUser(Principal p, Long id);
 }

@@ -58,4 +58,10 @@ public class UserServiceImpl implements UserService {
         return user.map(value -> thingDAO.getUserThings(value).stream()
                 .map(thing -> thingDTOMapper.toDTO(thing)).collect(Collectors.toList())).orElseGet(ArrayList::new);
     }
+
+    @Override
+    public boolean addThingToUser(Principal p, Long thingId) {
+        Optional<User> client = userDAO.getUserByEmail(p.getName());
+        return client.filter(value -> userDAO.setUserToThing(thingId, value.getId())).isPresent();
+    }
 }

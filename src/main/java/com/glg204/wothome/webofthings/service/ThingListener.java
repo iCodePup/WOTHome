@@ -1,11 +1,9 @@
 package com.glg204.wothome.webofthings.service;
 
-import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.dao.ThingDAO;
 import com.glg204.wothome.webofthings.domain.Thing;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.jmdns.JmDNS;
 import javax.jmdns.ServiceEvent;
@@ -18,13 +16,14 @@ public class ThingListener implements ServiceListener {
     private Logger logger = LoggerFactory.getLogger(ThingListener.class);
 
     private final JmDNS jmDNS;
+    private ThingDAO thingDAO;
 
-    @Autowired
-    ThingDAO thingDAO;
 
-    public ThingListener(JmDNS jmDNS) {
+    public ThingListener(ThingDAO thingDAO, JmDNS jmDNS) {
         this.jmDNS = jmDNS;
+        this.thingDAO = thingDAO;
         logger.info("ThingListener loaded");
+
     }
 
     @Override
@@ -37,13 +36,15 @@ public class ThingListener implements ServiceListener {
                             info.getPort()
                     );
             String name = serviceEvent.getName();
-            logger.info("Service added {} {}", name, url);
-            Optional<Thing> thing = thingDAO.findByURL(url);
+
+            Optional<Thing> thing = thingDAO.getByURL(url);
             if (thing.isPresent()) {
                 thingDAO.setThingAlive(url, true);
             } else {
                 thingDAO.save(new Thing(name, url, true));
             }
+            logger.info("Service added {} {}", name, url);
+
         }
     }
 
@@ -59,10 +60,18 @@ public class ThingListener implements ServiceListener {
 
             thingDAO.setThingAlive(url, false);
             logger.info("Service removed {}", url);
+        } else {//jmDNS lib bug...sometimes cant resolve getServiceInfo...
+            Optional<Thing> thing = thingDAO.getByName(serviceEvent.getName());
+            thing.ifPresent(value -> {
+                thingDAO.setThingAlive(value.getUrl(), false);
+                logger.info("- Service removed {}", value.getUrl());
+            });
+
         }
     }
 
     @Override
     public void serviceResolved(ServiceEvent serviceEvent) {
+        logger.info(" Service resolved {}", serviceEvent.getInfo().toString());
     }
 }
