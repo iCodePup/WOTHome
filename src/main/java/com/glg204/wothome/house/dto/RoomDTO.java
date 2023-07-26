@@ -1,20 +1,34 @@
 package com.glg204.wothome.house.dto;
 
+import com.glg204.wothome.webofthings.dto.ThingDTO;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+@Valid
 public class RoomDTO {
 
     private Long id;
 
+    @NotNull
     private String name;
 
+    @NotNull
     private Double surface;
 
+    private List<Long> thingsId;
+
     public RoomDTO() {
+        this.thingsId = new ArrayList<>();
     }
 
-    public RoomDTO(Long id, String name, Double surface) {
+    public RoomDTO(Long id, String name, Double surface, List<Long> thingsId) {
         this.id = id;
         this.name = name;
         this.surface = surface;
+        this.thingsId = thingsId;
     }
 
     public Long getId() {
@@ -39,5 +53,13 @@ public class RoomDTO {
 
     public void setSurface(Double surface) {
         this.surface = surface;
+    }
+
+    public List<Long> getThingsId() {
+        return thingsId;
+    }
+
+    public void setThingsId(List<Long> thingsId) {
+        this.thingsId = thingsId;
     }
 }

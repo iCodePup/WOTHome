@@ -10,6 +10,7 @@ import org.springframework.jdbc.support.KeyHolder;
 import org.springframework.stereotype.Repository;
 
 import java.sql.PreparedStatement;
+import java.util.Objects;
 import java.util.Optional;
 
 @Repository
@@ -35,15 +36,16 @@ public class HousePlanDAOImpl implements HousePlanDAO {
     }
 
     @Override
-    public Integer createHousePlan(User user) {
+    public HousePlan createHousePlan(User user) {
         KeyHolder keyHolder = new GeneratedKeyHolder();
         jdbcTemplate.update(connection -> {
             PreparedStatement ps = connection
-                    .prepareStatement("insert into houseplan (enduserid) values(?)");
+                    .prepareStatement("insert into houseplan (enduserid) values(?)", new String[] {"id"});
             ps.setLong(1, user.getId());
             return ps;
         }, keyHolder);
-        return (Integer) keyHolder.getKey();
+        return new HousePlan(
+                Objects.requireNonNull(keyHolder.getKey()).longValue(), user);
 
     }
 }

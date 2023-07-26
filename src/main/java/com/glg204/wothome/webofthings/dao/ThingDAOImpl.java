@@ -1,6 +1,7 @@
 
 package com.glg204.wothome.webofthings.dao;
 
+import com.glg204.wothome.house.domain.Room;
 import com.glg204.wothome.user.dao.UserDAO;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.domain.Thing;
@@ -57,6 +58,25 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
+    public List<Thing> getThingsByRoom(User user, Room room) {
+        String sqlGetThing = "select * from thing where roomid = ?";
+        try {
+            List<Thing> things = jdbcTemplate.queryForList(sqlGetThing, new Object[]{room.getId()}).stream().map(row -> {
+                return new Thing(Long.parseLong(row.get("id").toString()),
+                        String.valueOf(row.get("name")),
+                        String.valueOf(row.get("url")),
+                        Boolean.parseBoolean(row.get("alive").toString()),
+                        user,
+                        room);
+            }).toList();
+            return things;
+        } catch (EmptyResultDataAccessException e) {
+            return new ArrayList<>();
+        }
+    }
+
+
+    @Override
     public Optional<Thing> getByURL(String url) {
         String sqlGetThingInStore = "select * from thing where url = ?";
         try {
@@ -87,6 +107,15 @@ public class ThingDAOImpl implements ThingDAO {
         Object[] args = new Object[]{alive, url};
         return jdbcTemplate.update(sql, args) == 1;
     }
+
+
+    @Override
+    public boolean setThingRoom(Long thingId, Long roomId) {
+        String sql = "UPDATE thing SET roomid = ? WHERE id = ?";
+        Object[] args = new Object[]{roomId, thingId};
+        return jdbcTemplate.update(sql, args) == 1;
+    }
+
 
     @Override
     public void save(Thing thing) {

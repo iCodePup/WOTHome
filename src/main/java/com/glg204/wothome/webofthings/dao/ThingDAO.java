@@ -1,5 +1,6 @@
 package com.glg204.wothome.webofthings.dao;
 
+import com.glg204.wothome.house.domain.Room;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.domain.Thing;
 import org.springframework.stereotype.Repository;
@@ -21,4 +22,8 @@ public interface ThingDAO {
     Optional<Thing> getByName(String name);
 
     List<Thing> getThings();
+
+    boolean setThingRoom(Long thingId, Long roomId);
+
+    List<Thing> getThingsByRoom(User currentUser, Room room);
 }

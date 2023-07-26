@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface HousePlanDAO {
     Optional<HousePlan> getHousePlan(User value);
 
-    Integer createHousePlan(User user);
+    HousePlan createHousePlan(User user);
 }

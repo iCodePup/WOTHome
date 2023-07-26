@@ -9,4 +9,10 @@ import java.util.List;
 @Repository
 public interface RoomDAO {
     List<Room> getRoomsByHousePlan(HousePlan housePlan);
+
+    Long save(Room room);
+
+    boolean delete(Long id);
+
+    boolean update(Room room);
 }

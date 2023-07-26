@@ -47,7 +47,9 @@ alter table enduser
 
 alter table thing
     add column enduserid INT NULL DEFAULT NULL,
-    add foreign key (enduserid) references enduser (id);
+    add column roomid    INT NULL DEFAULT NULL,
+    add foreign key (enduserid) references enduser (id),
+    add foreign key (roomid) references room (id);
 
 alter table houseplan
     add column enduserid INT NULL DEFAULT NULL,

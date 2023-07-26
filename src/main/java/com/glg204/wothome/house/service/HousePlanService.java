@@ -9,4 +9,10 @@ import java.util.List;
 @Service
 public interface HousePlanService {
     List<RoomDTO> getRooms(Principal principal);
+
+    Boolean addRoom(Principal principal, RoomDTO roomDTO);
+
+    boolean delete(Long id);
+
+    boolean updateRoom(Principal principal, RoomDTO roomDTO);
 }

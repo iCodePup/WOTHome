@@ -1,5 +1,6 @@
 package com.glg204.wothome.webofthings.domain;
 
+import com.glg204.wothome.house.domain.Room;
 import com.glg204.wothome.user.domain.User;
 
 public class Thing {
@@ -13,6 +14,8 @@ public class Thing {
     private Boolean alive;
 
     private User user;
+
+    private Room room;
 
     public Thing() {
     }
@@ -36,6 +39,15 @@ public class Thing {
         this.url = url;
         this.alive = alive;
         this.user = user;
+    }
+
+    public Thing(Long id, String name, String url, Boolean alive, User user,Room room) {
+        this.id = id;
+        this.name = name;
+        this.url = url;
+        this.alive = alive;
+        this.user = user;
+        this.room = room;
     }
 
     public Long getId() {
@@ -76,5 +88,13 @@ public class Thing {
 
     public void setAlive(Boolean alive) {
         this.alive = alive;
+    }
+
+    public Room getRoom() {
+        return room;
+    }
+
+    public void setRoom(Room room) {
+        this.room = room;
     }
 }
