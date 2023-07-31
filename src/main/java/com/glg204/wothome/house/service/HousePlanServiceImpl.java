@@ -5,6 +5,7 @@ import com.glg204.wothome.house.dao.RoomDAO;
 import com.glg204.wothome.house.domain.HousePlan;
 import com.glg204.wothome.house.domain.Room;
 import com.glg204.wothome.house.dto.RoomDTO;
+import com.glg204.wothome.house.dto.RoomWithThingsDTO;
 import com.glg204.wothome.user.dao.UserDAO;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.dao.ThingDAO;
@@ -71,6 +72,20 @@ public class HousePlanServiceImpl implements HousePlanService {
                         .map(housePlan -> this.updateRoom(housePlan, roomDTO))
                         .orElseGet(() -> this.updateRoom(housePlanDAO.createHousePlan(currentUser), roomDTO)))
                 .orElse(false);
+    }
+
+    @Override
+    public List<RoomWithThingsDTO> getRoomsWithThings(Principal principal) {
+        Optional<User> user = userDAO.getUserByEmail(principal.getName());
+        return user.map(currentUser -> housePlanDAO.getHousePlan(currentUser)
+                .map(housePlan -> roomDAO.getRoomsByHousePlan(housePlan)
+                        .stream().map(room -> {
+                            List<Thing> thingList = thingDAO.getThingsByRoom(currentUser, room);
+                            return roomDTOMapper.toDTOWithThings(room, thingList);
+                        }).collect(Collectors.toList())).orElseGet(() -> {
+                    housePlanDAO.createHousePlan(currentUser);
+                    return new ArrayList<>();
+                })).orElseGet(ArrayList::new);
     }
 
 

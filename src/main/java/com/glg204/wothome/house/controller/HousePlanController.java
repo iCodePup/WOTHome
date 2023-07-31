@@ -2,6 +2,7 @@ package com.glg204.wothome.house.controller;
 
 
 import com.glg204.wothome.house.dto.RoomDTO;
+import com.glg204.wothome.house.dto.RoomWithThingsDTO;
 import com.glg204.wothome.house.service.HousePlanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,6 +28,12 @@ public class HousePlanController {
     public ResponseEntity<List<RoomDTO>> getRooms(Principal principal) {
         List<RoomDTO> roomDTOList = housePlanService.getRooms(principal);
         return ResponseEntity.ok(roomDTOList);
+    }
+
+    @GetMapping("/room/things")
+    public ResponseEntity<List<RoomWithThingsDTO>> getRoomsWithThings(Principal principal) {
+        List<RoomWithThingsDTO> roomsWithThingsList = housePlanService.getRoomsWithThings(principal);
+        return ResponseEntity.ok(roomsWithThingsList);
     }
 
     @PostMapping("/room")

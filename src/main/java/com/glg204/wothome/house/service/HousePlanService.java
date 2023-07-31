@@ -1,6 +1,7 @@
 package com.glg204.wothome.house.service;
 
 import com.glg204.wothome.house.dto.RoomDTO;
+import com.glg204.wothome.house.dto.RoomWithThingsDTO;
 import org.springframework.stereotype.Service;
 
 import java.security.Principal;
@@ -15,4 +16,6 @@ public interface HousePlanService {
     boolean delete(Long roomId);
 
     boolean updateRoom(Principal principal, RoomDTO roomDTO);
+
+    List<RoomWithThingsDTO> getRoomsWithThings(Principal principal);
 }

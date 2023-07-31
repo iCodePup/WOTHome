@@ -1,6 +1,7 @@
 package com.glg204.wothome.webofthings.dto;
 
 import com.glg204.wothome.user.dto.UserDTO;
+import org.springframework.stereotype.Service;
 
 public class ThingDTO {
 
