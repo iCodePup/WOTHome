@@ -60,8 +60,8 @@ public class HousePlanServiceImpl implements HousePlanService {
     }
 
     @Override
-    public boolean delete(Long id) {
-        return roomDAO.delete(id);
+    public boolean delete(Long roomId) {
+        return roomDAO.delete(roomId);
     }
 
     @Override

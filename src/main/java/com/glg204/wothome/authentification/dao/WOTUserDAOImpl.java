@@ -47,7 +47,5 @@ public class WOTUserDAOImpl implements WOTUserDAO {
             return ps;
         });
         return wotUser;
-
-
     }
 }

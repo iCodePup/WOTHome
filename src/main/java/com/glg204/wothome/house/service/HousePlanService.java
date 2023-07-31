@@ -12,7 +12,7 @@ public interface HousePlanService {
 
     Boolean addRoom(Principal principal, RoomDTO roomDTO);
 
-    boolean delete(Long id);
+    boolean delete(Long roomId);
 
     boolean updateRoom(Principal principal, RoomDTO roomDTO);
 }

@@ -61,20 +61,18 @@ public class ThingDAOImpl implements ThingDAO {
     public List<Thing> getThingsByRoom(User user, Room room) {
         String sqlGetThing = "select * from thing where roomid = ?";
         try {
-            List<Thing> things = jdbcTemplate.queryForList(sqlGetThing, new Object[]{room.getId()}).stream().map(row -> {
-                return new Thing(Long.parseLong(row.get("id").toString()),
-                        String.valueOf(row.get("name")),
-                        String.valueOf(row.get("url")),
-                        Boolean.parseBoolean(row.get("alive").toString()),
-                        user,
-                        room);
-            }).toList();
+            List<Thing> things = jdbcTemplate.queryForList(sqlGetThing, new Object[]{room.getId()}).stream().map(
+                    row -> new Thing(Long.parseLong(row.get("id").toString()),
+                            String.valueOf(row.get("name")),
+                            String.valueOf(row.get("url")),
+                            Boolean.parseBoolean(row.get("alive").toString()),
+                            user,
+                            room)).toList();
             return things;
         } catch (EmptyResultDataAccessException e) {
             return new ArrayList<>();
         }
     }
-
 
     @Override
     public Optional<Thing> getByURL(String url) {
