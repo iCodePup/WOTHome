@@ -28,45 +28,53 @@ public class ThingListener implements ServiceListener {
 
     @Override
     public void serviceAdded(ServiceEvent serviceEvent) {
-        ServiceInfo info = jmDNS.getServiceInfo(serviceEvent.getType(), serviceEvent.getName());
-        if (info != null) {
-            String url =
-                    String.format("http://%s:%s",
-                            info.getHostAddresses()[0],
-                            info.getPort()
-                    );
-            String name = serviceEvent.getName();
+        try {
+            ServiceInfo info = jmDNS.getServiceInfo(serviceEvent.getType(), serviceEvent.getName());
+            if (info != null) {
+                String url =
+                        String.format("http://%s:%s",
+                                info.getHostAddresses()[0],
+                                info.getPort()
+                        );
+                String name = serviceEvent.getName();
 
-            Optional<Thing> thing = thingDAO.getByURL(url);
-            if (thing.isPresent()) {
-                thingDAO.setThingAlive(url, true);
-            } else {
-                thingDAO.save(new Thing(name, url, true));
+                Optional<Thing> thing = thingDAO.getByURL(url);
+                if (thing.isPresent()) {
+                    thingDAO.setThingAlive(url, true);
+                } else {
+                    thingDAO.save(new Thing(name, url, true));
+                }
+                logger.info("Service added {} {}", name, url);
+
             }
-            logger.info("Service added {} {}", name, url);
-
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
     @Override
     public void serviceRemoved(ServiceEvent serviceEvent) {
-        ServiceInfo info = jmDNS.getServiceInfo(serviceEvent.getType(), serviceEvent.getName());
-        if (info != null) {
-            String url =
-                    String.format("http://%s:%s",
-                            info.getHostAddresses()[0],
-                            info.getPort()
-                    );
+        try {
+            ServiceInfo info = jmDNS.getServiceInfo(serviceEvent.getType(), serviceEvent.getName());
+            if (info != null) {
+                String url =
+                        String.format("http://%s:%s",
+                                info.getHostAddresses()[0],
+                                info.getPort()
+                        );
 
-            thingDAO.setThingAlive(url, false);
-            logger.info("Service removed {}", url);
-        } else {//jmDNS lib bug...sometimes cant resolve getServiceInfo...
-            Optional<Thing> thing = thingDAO.getByName(serviceEvent.getName());
-            thing.ifPresent(value -> {
-                thingDAO.setThingAlive(value.getUrl(), false);
-                logger.info("- Service removed {}", value.getUrl());
-            });
+                thingDAO.setThingAlive(url, false);
+                logger.info("Service removed {}", url);
+            } else {//jmDNS lib bug...sometimes cant resolve getServiceInfo...
+                Optional<Thing> thing = thingDAO.getByName(serviceEvent.getName());
+                thing.ifPresent(value -> {
+                    thingDAO.setThingAlive(value.getUrl(), false);
+                    logger.info("- Service removed {}", value.getUrl());
+                });
 
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 

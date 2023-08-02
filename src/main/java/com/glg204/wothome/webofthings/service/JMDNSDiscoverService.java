@@ -18,6 +18,7 @@ public class JMDNSDiscoverService {
 
     @PostConstruct
     public void init() {
+        System.setProperty("java.net.preferIPv4Stack", "true");
         getDisoveredThings();
     }
 

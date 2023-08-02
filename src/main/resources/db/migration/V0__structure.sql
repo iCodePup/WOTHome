@@ -24,7 +24,7 @@ create table wot_user
 create table thing
 (
     id    SERIAL PRIMARY KEY,
-    name  VARCHAR(100) NOT NULL unique,
+    name  VARCHAR(100) NOT NULL,
     url   VARCHAR(100) NOT NULL unique,
     alive BOOLEAN DEFAULT FALSE
 );

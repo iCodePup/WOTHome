@@ -85,7 +85,7 @@ public class UserDAOImpl implements UserDAO {
 
     @Override
     public Optional<User> getById(long clientid) {
-        String sqlGetClient = "select * from user where id = ?";
+        String sqlGetClient = "select * from enduser where id = ?";
         try {
             return jdbcTemplate.queryForObject(sqlGetClient, new Object[]{clientid}, (rs, rowNum) -> {
                 Optional<WOTUser> wotUser = wotUserDAO.findByEmail(String.valueOf(rs.getString("email")));
