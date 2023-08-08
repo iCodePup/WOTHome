@@ -1,11 +1,7 @@
 package com.glg204.wothome.scene.dto;
 
 
-import com.glg204.wothome.webofthings.domain.Thing;
-
-import java.util.List;
-
-public class ActionDTO {
+public class TriggerThingExpressionDTO extends TriggerExpressionDTO {
 
     private Long thingId;
 
@@ -13,8 +9,7 @@ public class ActionDTO {
 
     private String value;
 
-
-    public ActionDTO() {
+    public TriggerThingExpressionDTO() {
     }
 
 
