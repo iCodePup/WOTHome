@@ -56,17 +56,17 @@ create table trigger_expression
 create table trigger_and_expression
 (
     first_expression_id  INT,
-    second_expression_id INT,
-    FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id),
-    FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id)
+    second_expression_id INT
+--     FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id), --TODO fix issue using FK
+--     FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id) --TODO fix issue using FK
 ) INHERITS (trigger_expression);
 
 create table trigger_or_expression
 (
     first_expression_id  INT,
-    second_expression_id INT,
-    FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id),
-    FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id)
+    second_expression_id INT
+--     FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id), --TODO fix issue using FK
+--     FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id)  --TODO fix issue using FK
 ) INHERITS (trigger_expression);
 
 
@@ -84,6 +84,25 @@ create table trigger_timer_expression
 (
     runtime TIMESTAMP
 ) INHERITS (trigger_expression);
+
+
+create table action
+(
+    id       SERIAL PRIMARY KEY,
+    thing_id INT,
+    property VARCHAR(255),
+    value    VARCHAR(255),
+    FOREIGN KEY (thing_id) REFERENCES thing (id)
+
+) INHERITS (trigger_expression);
+
+alter table rule
+    add column enduserid           INT NULL DEFAULT NULL,
+    add column actionid            INT NULL DEFAULT NULL,
+    add column triggerexpressionid INT NULL DEFAULT NULL,
+    add foreign key (enduserid) references enduser (id),
+    add foreign key (actionid) references action (id);
+--     add foreign key (triggerexpressionid) references trigger_expression (id); --TODO fix issue using FK
 
 
 alter table enduser
@@ -104,6 +123,4 @@ alter table room
     add column houseplanid INT NULL DEFAULT NULL,
     add foreign key (houseplanid) references houseplan (id);
 
-alter table rule
-    add column enduserid INT NULL DEFAULT NULL,
-    add foreign key (enduserid) references enduser (id);
+

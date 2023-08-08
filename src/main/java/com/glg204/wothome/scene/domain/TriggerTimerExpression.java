@@ -8,6 +8,18 @@ public class TriggerTimerExpression extends TriggerExpression {
 
     private Instant runtime;
 
+    public TriggerTimerExpression(Instant runtime) {
+        this.runtime = runtime;
+    }
+
+    public Instant getRuntime() {
+        return runtime;
+    }
+
+    public void setRuntime(Instant runtime) {
+        this.runtime = runtime;
+    }
+
     @Override
     public void process() {
 

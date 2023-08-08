@@ -100,6 +100,31 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
+    public Optional<Thing> getById(Long id) {
+        String sqlGetThingInStore = "select * from thing where id = ?";
+        try {
+            Thing thing = jdbcTemplate.queryForObject(sqlGetThingInStore, new Object[]{id}, (rs, rowNum) -> {
+                Long aId = rs.getLong("id");
+                String name = rs.getString("name");
+                String aUrl = rs.getString("url");
+                Boolean alive = rs.getBoolean("alive");
+                Thing t = new Thing(
+                        aId, name, aUrl, alive);
+                if (rs.getString("enduserid") != null) {
+                    Optional<User> optionalClient = userDAO.getById(Long.parseLong(rs.getString("enduserid").toString()));
+                    if (optionalClient.isPresent()) {
+                        t.setUser(optionalClient.get());
+                    }
+                }
+                return t;
+            });
+            return Optional.of(thing);
+        } catch (EmptyResultDataAccessException e) {
+            return Optional.empty();
+        }
+    }
+
+    @Override
     public boolean setThingAlive(String url, boolean alive) {
         String sql = "UPDATE thing SET alive = ? WHERE url = ?";
         Object[] args = new Object[]{alive, url};

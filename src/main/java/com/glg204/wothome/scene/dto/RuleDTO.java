@@ -1,12 +1,17 @@
 package com.glg204.wothome.scene.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+
 public class RuleDTO {
 
+    @NotNull
     private String name;
 
+    @NotNull
     private TriggerExpressionDTO triggerExpressionDTO;
 
+    @NotNull
     private ActionDTO actionDTO;
 
     public RuleDTO() {

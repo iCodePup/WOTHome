@@ -71,7 +71,7 @@ public class HousePlanController {
             String errorMessage = error.getDefaultMessage();
             errors.put(fieldName, errorMessage);
         });
-        errors.put("message","Erreur dans le formulaire");
+        errors.put("message","Une erreur de validation est survenue");
         return errors;
     }
 }

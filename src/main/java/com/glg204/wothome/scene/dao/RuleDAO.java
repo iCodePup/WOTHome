@@ -1,6 +1,9 @@
 package com.glg204.wothome.scene.dao;
 
 
-public class RuleDAO {
+import com.glg204.wothome.scene.domain.Rule;
 
+public interface RuleDAO {
+
+    Long save(Rule r);
 }

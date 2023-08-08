@@ -1,12 +1,17 @@
 package com.glg204.wothome.scene.dto;
 
 
+import jakarta.validation.constraints.NotNull;
+
 public class TriggerThingExpressionDTO extends TriggerExpressionDTO {
 
+    @NotNull
     private Long thingId;
 
+    @NotNull
     private String property;
 
+    @NotNull
     private String value;
 
     public TriggerThingExpressionDTO() {

@@ -2,21 +2,23 @@ package com.glg204.wothome.scene.dto;
 
 
 import com.glg204.wothome.webofthings.domain.Thing;
+import jakarta.validation.constraints.NotNull;
 
 import java.util.List;
 
 public class ActionDTO {
 
+    @NotNull
     private Long thingId;
 
+    @NotNull
     private String property;
 
+    @NotNull
     private String value;
-
 
     public ActionDTO() {
     }
-
 
     public Long getThingId() {
         return thingId;

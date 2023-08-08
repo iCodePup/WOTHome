@@ -1,5 +1,6 @@
 package com.glg204.wothome.scene.service;
 
+import com.glg204.wothome.scene.dao.RuleDAO;
 import com.glg204.wothome.scene.domain.Rule;
 import com.glg204.wothome.scene.dto.RuleDTO;
 import com.glg204.wothome.user.dao.UserDAO;
@@ -17,6 +18,9 @@ public class RuleServiceImpl implements RuleService {
     UserDAO userDAO;
 
     @Autowired
+    RuleDAO ruleDAO;
+
+    @Autowired
     RuleDTOMapper ruleDTOMapper;
 
 
@@ -24,9 +28,9 @@ public class RuleServiceImpl implements RuleService {
     public boolean addRule(Principal principal, RuleDTO ruleDTO) {
 
         Optional<User> user = userDAO.getUserByEmail(principal.getName());
-         user.map(currentUser -> {
-                    Rule r = ruleDTOMapper.fromDTO(ruleDTO,currentUser);
-
+        user.map(currentUser -> {
+                    Rule r = ruleDTOMapper.fromDTO(ruleDTO, currentUser);
+                    ruleDAO.save(r);
 
                     return true;
                 }
