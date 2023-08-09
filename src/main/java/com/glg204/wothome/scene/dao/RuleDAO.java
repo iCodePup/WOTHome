@@ -8,7 +8,7 @@ import java.util.List;
 
 public interface RuleDAO {
 
-    List<Rule> getAllRules(User currentUser);
+    List<Rule> getRules(User currentUser);
 
     Long save(Rule r);
 }

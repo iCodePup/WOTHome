@@ -41,7 +41,7 @@ public class RuleServiceImpl implements RuleService {
     public List<RuleDTO> getRules(Principal principal) {
         Optional<User> user = userDAO.getUserByEmail(principal.getName());
         user.map(currentUser -> {
-                    List<Rule> ruleList = ruleDAO.getAllRules(currentUser);
+                    List<Rule> ruleList = ruleDAO.getRules(currentUser);
                     return new ArrayList<>();
                 }
         );

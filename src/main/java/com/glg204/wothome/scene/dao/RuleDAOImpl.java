@@ -25,7 +25,7 @@ public class RuleDAOImpl implements RuleDAO {
     @Autowired
     private JdbcTemplate jdbcTemplate;
 
-    public List<Rule> getAllRules(User currentUser) {
+    public List<Rule> getRules(User currentUser) {
         String sql = "SELECT r.id AS rule_id, r.name, " +
                 "a.id AS action_id, a.property AS action_property, a.value AS action_value, " +
                 "te.id AS trigger_expression_id, " +
