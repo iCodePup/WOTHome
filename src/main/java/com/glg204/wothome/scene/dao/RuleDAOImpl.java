@@ -3,12 +3,9 @@ package com.glg204.wothome.scene.dao;
 
 import com.glg204.wothome.scene.domain.*;
 import com.glg204.wothome.user.domain.User;
-import com.glg204.wothome.webofthings.domain.Thing;
-import com.glg204.wothome.webofthings.service.ThingListener;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.jdbc.support.KeyHolder;
@@ -17,18 +14,37 @@ import org.springframework.stereotype.Repository;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
-
-import org.springframework.transaction.annotation.Transactional;
 
 @Repository
 public class RuleDAOImpl implements RuleDAO {
 
-    private Logger logger = LoggerFactory.getLogger(RuleDAOImpl.class);
+    private final Logger logger = LoggerFactory.getLogger(RuleDAOImpl.class);
 
     @Autowired
     private JdbcTemplate jdbcTemplate;
+
+    public List<Rule> getAllRules(User currentUser) {
+        String sql = "SELECT r.id AS rule_id, r.name, " +
+                "a.id AS action_id, a.property AS action_property, a.value AS action_value, " +
+                "te.id AS trigger_expression_id, " +
+                "ttae.id AS and_expression_id, ttae.first_expression_id AS first_and_expression_id, ttae.second_expression_id AS second_and_expression_id, " +
+                "ttoe.id AS or_expression_id, ttoe.first_expression_id AS first_or_expression_id, ttoe.second_expression_id AS second_or_expression_id, " +
+                "ttte.id AS timer_expression_id, ttte.runtime AS timer_expression_runtime, " +
+                "tthe.id AS thing_expression_id, tthe.thing_id AS thing_expression_thing_id, tthe.property AS thing_expression_property, tthe.value AS thing_expression_value " +
+                "FROM rule r " +
+                "JOIN action a ON r.actionid = a.id " +
+                "JOIN trigger_expression te ON r.triggerexpressionid = te.id " +
+                "LEFT JOIN trigger_and_expression ttae ON te.id = ttae.id " +
+                "LEFT JOIN trigger_or_expression ttoe ON te.id = ttoe.id " +
+                "LEFT JOIN trigger_timer_expression ttte ON te.id = ttte.id " +
+                "LEFT JOIN trigger_thing_expression tthe ON te.id = tthe.id " +
+                "WHERE enduserid = ?";
+
+        return jdbcTemplate.query(sql, new Object[]{currentUser.getId()}, new RuleRowMapper(currentUser, jdbcTemplate));
+    }
+
 
     public Long save(Rule rule) {
         if (rule.getAction() != null && rule.getTriggerExpression() != null) {
@@ -39,11 +55,12 @@ public class RuleDAOImpl implements RuleDAO {
 
             jdbcTemplate.update(connection -> {
                 PreparedStatement ps = connection.prepareStatement(
-                        "INSERT INTO rule (name, actionid, triggerexpressionid) VALUES (?, ?, ?)",
+                        "INSERT INTO rule (name, enduserid, actionid, triggerexpressionid) VALUES (?,?, ?, ?)",
                         Statement.RETURN_GENERATED_KEYS);
                 ps.setString(1, rule.getName());
-                ps.setLong(2, actionId);
-                ps.setLong(3, triggerExpressionId);
+                ps.setLong(2, rule.getUser().getId());
+                ps.setLong(3, actionId);
+                ps.setLong(4, triggerExpressionId);
                 return ps;
             }, keyHolder);
 

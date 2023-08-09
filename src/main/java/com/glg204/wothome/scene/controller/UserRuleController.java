@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -19,6 +20,12 @@ public class UserRuleController {
 
     @Autowired
     RuleService ruleService;
+
+    @GetMapping("/rule")
+    public ResponseEntity<List<RuleDTO>> getRules(Principal principal) {
+        List<RuleDTO> ruleDTOList = ruleService.getRules(principal);
+        return ResponseEntity.ok(ruleDTOList);
+    }
 
     @PostMapping("/rule")
     public ResponseEntity<String> addRule(Principal principal, @Valid @RequestBody RuleDTO ruleDTO) {

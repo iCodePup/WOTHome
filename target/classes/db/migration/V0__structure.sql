@@ -94,7 +94,8 @@ create table action
     value    VARCHAR(255),
     FOREIGN KEY (thing_id) REFERENCES thing (id)
 
-) INHERITS (trigger_expression);
+);
+
 
 alter table rule
     add column enduserid           INT NULL DEFAULT NULL,
