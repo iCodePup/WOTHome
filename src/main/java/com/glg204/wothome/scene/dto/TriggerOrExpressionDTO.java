@@ -10,6 +10,10 @@ public class TriggerOrExpressionDTO extends TriggerExpressionDTO {
     public TriggerOrExpressionDTO() {
     }
 
+    public TriggerOrExpressionDTO(TriggerExpressionDTO firstExpression, TriggerExpressionDTO secondExpression) {
+        this.firstExpression = firstExpression;
+        this.secondExpression = secondExpression;
+    }
 
     public TriggerExpressionDTO getFirstExpression() {
         return firstExpression;

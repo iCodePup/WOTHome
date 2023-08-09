@@ -5,6 +5,8 @@ import jakarta.validation.constraints.NotNull;
 
 public class RuleDTO {
 
+    private Long id;
+
     @NotNull
     private String name;
 
@@ -15,6 +17,14 @@ public class RuleDTO {
     private ActionDTO actionDTO;
 
     public RuleDTO() {
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
     }
 
     public String getName() {

@@ -10,6 +10,10 @@ public class TriggerTimerExpressionDTO extends TriggerExpressionDTO {
     public TriggerTimerExpressionDTO() {
     }
 
+    public TriggerTimerExpressionDTO(Instant runtime) {
+        this.runtime = runtime;
+    }
+
     public Instant getRuntime() {
         return runtime;
     }

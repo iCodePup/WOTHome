@@ -14,6 +14,7 @@ import java.security.Principal;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 public class UserRuleController {
@@ -26,6 +27,17 @@ public class UserRuleController {
         List<RuleDTO> ruleDTOList = ruleService.getRules(principal);
         return ResponseEntity.ok(ruleDTOList);
     }
+
+    @GetMapping("/rule/{id}")
+    public ResponseEntity<RuleDTO> getRules(Principal principal, @PathVariable Long id) {
+        Optional<RuleDTO> ruleDTOOptional = ruleService.getRuleById(principal, id);
+        if (ruleDTOOptional.isPresent()) {
+            return ResponseEntity.ok(ruleDTOOptional.get());
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
 
     @PostMapping("/rule")
     public ResponseEntity<String> addRule(Principal principal, @Valid @RequestBody RuleDTO ruleDTO) {

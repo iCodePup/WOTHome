@@ -25,7 +25,6 @@ public class RuleServiceImpl implements RuleService {
     @Autowired
     RuleDTOMapper ruleDTOMapper;
 
-
     @Override
     public boolean addRule(Principal principal, RuleDTO ruleDTO) {
         Optional<User> user = userDAO.getUserByEmail(principal.getName());
@@ -40,12 +39,13 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public List<RuleDTO> getRules(Principal principal) {
         Optional<User> user = userDAO.getUserByEmail(principal.getName());
-        user.map(currentUser -> {
-                    List<Rule> ruleList = ruleDAO.getRules(currentUser);
-                    return new ArrayList<>();
-                }
-        );
+        return user.map(currentUser -> ruleDAO.getRules(currentUser).stream().map(rule -> ruleDTOMapper.toDTO(rule)).toList())
+                .orElseGet(ArrayList::new);
+    }
 
-        return new ArrayList<>();
+    @Override
+    public Optional<RuleDTO> getRuleById(Principal principal, Long id) {
+        Optional<User> user = userDAO.getUserByEmail(principal.getName());
+        return user.map(currentUser -> ruleDTOMapper.toDTO(ruleDAO.getRuleById(currentUser,id)));
     }
 }

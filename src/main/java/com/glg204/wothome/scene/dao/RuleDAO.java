@@ -10,5 +10,7 @@ public interface RuleDAO {
 
     List<Rule> getRules(User currentUser);
 
+    Rule getRuleById(User currentUser, Long id);
+
     Long save(Rule r);
 }

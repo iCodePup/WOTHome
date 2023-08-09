@@ -18,6 +18,12 @@ public class TriggerThingExpressionDTO extends TriggerExpressionDTO {
     }
 
 
+    public TriggerThingExpressionDTO(Long thingId, String property, String value) {
+        this.thingId = thingId;
+        this.property = property;
+        this.value = value;
+    }
+
     public Long getThingId() {
         return thingId;
     }
