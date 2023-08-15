@@ -1,15 +1,13 @@
 package com.glg204.wothome.scene.dto;
 
 
-import com.glg204.wothome.webofthings.domain.Thing;
+import com.glg204.wothome.webofthings.dto.ThingDTO;
 import jakarta.validation.constraints.NotNull;
-
-import java.util.List;
 
 public class ActionDTO {
 
     @NotNull
-    private Long thingId;
+    private ThingDTO thingDTO;
 
     @NotNull
     private String property;
@@ -20,12 +18,12 @@ public class ActionDTO {
     public ActionDTO() {
     }
 
-    public Long getThingId() {
-        return thingId;
+    public ThingDTO getThingDTO() {
+        return thingDTO;
     }
 
-    public void setThingId(Long thingId) {
-        this.thingId = thingId;
+    public void setThingDTO(ThingDTO thingDTO) {
+        this.thingDTO = thingDTO;
     }
 
     public String getProperty() {

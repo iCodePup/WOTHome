@@ -1,12 +1,13 @@
 package com.glg204.wothome.scene.dto;
 
 
+import com.glg204.wothome.webofthings.dto.ThingDTO;
 import jakarta.validation.constraints.NotNull;
 
 public class TriggerThingExpressionDTO extends TriggerExpressionDTO {
 
     @NotNull
-    private Long thingId;
+    private ThingDTO thingDTO;
 
     @NotNull
     private String property;
@@ -17,19 +18,18 @@ public class TriggerThingExpressionDTO extends TriggerExpressionDTO {
     public TriggerThingExpressionDTO() {
     }
 
-
-    public TriggerThingExpressionDTO(Long thingId, String property, String value) {
-        this.thingId = thingId;
+    public TriggerThingExpressionDTO(ThingDTO thingDTO, String property, String value) {
+        this.thingDTO = thingDTO;
         this.property = property;
         this.value = value;
     }
 
-    public Long getThingId() {
-        return thingId;
+    public ThingDTO getThingDTO() {
+        return thingDTO;
     }
 
-    public void setThingId(Long thingId) {
-        this.thingId = thingId;
+    public void setThingDTO(ThingDTO thingDTO) {
+        this.thingDTO = thingDTO;
     }
 
     public String getProperty() {

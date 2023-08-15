@@ -5,6 +5,7 @@ import com.glg204.wothome.scene.dto.*;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.dao.ThingDAO;
 import com.glg204.wothome.webofthings.domain.Thing;
+import com.glg204.wothome.webofthings.service.ThingDTOMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,9 +17,15 @@ public class RuleDTOMapper {
     @Autowired
     ThingDAO thingDAO;
 
+    @Autowired
+    ThingDTOMapper thingDTOMapper;
+
     public Rule fromDTO(RuleDTO ruleDTO, User currentUser) {
         Rule rule = new Rule(ruleDTO.getName(), currentUser);
-        Optional<Thing> optionalActionThing = thingDAO.getById(ruleDTO.getActionDTO().getThingId());
+        Optional<Thing> optionalActionThing = Optional.empty();
+        if (ruleDTO.getActionDTO().getThingDTO() != null) {
+            optionalActionThing = thingDAO.getById(ruleDTO.getActionDTO().getThingDTO().getId());
+        }
         optionalActionThing.ifPresent(thing -> {
             rule.setAction(new Action(thing,
                     ruleDTO.getActionDTO().getProperty(),
@@ -35,7 +42,8 @@ public class RuleDTOMapper {
         Action action = rule.getAction();
         if (action != null) {
             ActionDTO actionDTO = new ActionDTO();
-            actionDTO.setThingId(action.getThing().getId());
+
+            actionDTO.setThingDTO(thingDTOMapper.toDTO(action.getThing()));
             actionDTO.setProperty(action.getProperty());
             actionDTO.setValue(action.getValue());
             ruleDTO.setActionDTO(actionDTO);
@@ -63,7 +71,7 @@ public class RuleDTOMapper {
             );
         } else if (domain instanceof TriggerThingExpression thingExpression) {
             return new TriggerThingExpressionDTO(
-                    thingExpression.getThing().getId(),
+                    thingDTOMapper.toDTO(thingExpression.getThing()),
                     thingExpression.getProperty(),
                     thingExpression.getValue()
             );
@@ -86,7 +94,10 @@ public class RuleDTOMapper {
                     mapDtoToDomain(orDto.getSecondExpression())
             );
         } else if (dto instanceof TriggerThingExpressionDTO thingDto) {
-            Optional<Thing> optionalThing = thingDAO.getById(thingDto.getThingId());
+            Optional<Thing> optionalThing = Optional.empty();
+            if (thingDto.getThingDTO() != null) {
+                optionalThing = thingDAO.getById(thingDto.getThingDTO().getId());
+            }
             return optionalThing.map(thing -> new TriggerThingExpression(
                     thing,
                     thingDto.getProperty(),

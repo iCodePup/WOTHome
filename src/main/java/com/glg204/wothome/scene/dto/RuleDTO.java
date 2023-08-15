@@ -50,4 +50,13 @@ public class RuleDTO {
     public void setTriggerExpressionDTO(TriggerExpressionDTO triggerExpressionDTO) {
         this.triggerExpressionDTO = triggerExpressionDTO;
     }
+
+    public String getTriggerDescription() {
+        return "";
+    }
+
+
+    public String getActionDescription() {
+        return "";
+    }
 }

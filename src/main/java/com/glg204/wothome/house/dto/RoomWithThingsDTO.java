@@ -1,8 +1,6 @@
 package com.glg204.wothome.house.dto;
 
 import com.glg204.wothome.webofthings.dto.ThingDTO;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
