@@ -21,7 +21,7 @@ import java.util.List;
 @Service
 public class RuleEvaluator {
 
-    private Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
+    private final Logger logger = LoggerFactory.getLogger(RuleEvaluator.class);
 
     @Autowired
     RuleDAO ruleDAO;
