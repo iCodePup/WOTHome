@@ -2,6 +2,7 @@ package com.glg204.wothome.scene.dao;
 
 
 import com.glg204.wothome.scene.domain.*;
+import com.glg204.wothome.user.dao.UserDAO;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.dao.ThingDAO;
 import org.slf4j.Logger;
@@ -29,6 +30,9 @@ public class RuleDAOImpl implements RuleDAO {
     @Autowired
     private ThingDAO thingDAO;
 
+    @Autowired
+    private UserDAO userDAO;
+
     public List<Rule> getRules(User currentUser) {
         String sql = "SELECT r.id AS rule_id, r.name, " +
                 "a.id AS action_id, a.thing_id as action_thing_id, a.property AS action_property, a.value AS action_value, " +
@@ -46,7 +50,26 @@ public class RuleDAOImpl implements RuleDAO {
                 "LEFT JOIN trigger_thing_expression tthe ON te.id = tthe.id " +
                 "WHERE enduserid = ?";
 
-        return jdbcTemplate.query(sql, new Object[]{currentUser.getId()}, new RuleRowMapper(currentUser, thingDAO, jdbcTemplate));
+        return jdbcTemplate.query(sql, new Object[]{currentUser.getId()}, new RuleRowMapper(userDAO, thingDAO, jdbcTemplate));
+    }
+
+    public List<Rule> getRules() {
+        String sql = "SELECT r.id AS rule_id, r.name, " +
+                "a.id AS action_id, a.thing_id as action_thing_id, a.property AS action_property, a.value AS action_value, " +
+                "te.id AS trigger_expression_id, " +
+                "ttae.id AS and_expression_id, ttae.first_expression_id AS first_and_expression_id, ttae.second_expression_id AS second_and_expression_id, " +
+                "ttoe.id AS or_expression_id, ttoe.first_expression_id AS first_or_expression_id, ttoe.second_expression_id AS second_or_expression_id, " +
+                "ttte.id AS timer_expression_id, ttte.runtime AS timer_expression_runtime, " +
+                "tthe.id AS thing_expression_id, tthe.thing_id AS thing_expression_thing_id, tthe.property AS thing_expression_property, tthe.value AS thing_expression_value " +
+                "FROM rule r " +
+                "JOIN action a ON r.actionid = a.id " +
+                "JOIN trigger_expression te ON r.triggerexpressionid = te.id " +
+                "LEFT JOIN trigger_and_expression ttae ON te.id = ttae.id " +
+                "LEFT JOIN trigger_or_expression ttoe ON te.id = ttoe.id " +
+                "LEFT JOIN trigger_timer_expression ttte ON te.id = ttte.id " +
+                "LEFT JOIN trigger_thing_expression tthe ON te.id = tthe.id ";
+
+        return jdbcTemplate.query(sql, new RuleRowMapper(userDAO, thingDAO, jdbcTemplate));
     }
 
     @Override

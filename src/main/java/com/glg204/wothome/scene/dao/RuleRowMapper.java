@@ -1,6 +1,7 @@
 package com.glg204.wothome.scene.dao;
 
 import com.glg204.wothome.scene.domain.*;
+import com.glg204.wothome.user.dao.UserDAO;
 import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.dao.ThingDAO;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -17,14 +18,14 @@ public class RuleRowMapper implements RowMapper<Rule> {
 
     private final JdbcTemplate jdbcTemplate;
 
-    private final User currentUser;
-
     private final ThingDAO thingDAO;
 
-    public RuleRowMapper(User currentUser, ThingDAO thingDAO, JdbcTemplate jdbcTemplate) {
-        this.currentUser = currentUser;
+    private final UserDAO userDAO;
+
+    public RuleRowMapper(UserDAO userDAO, ThingDAO thingDAO, JdbcTemplate jdbcTemplate) {
         this.jdbcTemplate = jdbcTemplate;
         this.thingDAO = thingDAO;
+        this.userDAO = userDAO;
     }
 
     @Override
@@ -32,7 +33,10 @@ public class RuleRowMapper implements RowMapper<Rule> {
         Rule rule = new Rule();
         rule.setId(rs.getLong("rule_id"));
         rule.setName(rs.getString("name"));
-        rule.setUser(currentUser);
+        if (rs.getObject("enduserid") != null) {
+            userDAO.getById(rs.getLong("enduserid")).ifPresent(rule::setUser);
+        }
+
         Action action = new Action();
         action.setId(rs.getLong("action_id"));
         if (rs.getObject("action_thing_id") != null) {
@@ -52,7 +56,7 @@ public class RuleRowMapper implements RowMapper<Rule> {
         String query = getTriggerExpressionQuery();
 
         if (rs.getObject("and_expression_id") != null && rs.getLong("and_expression_id") == expressionId) {
-            if (jdbcTemplate.getDataSource() != null ) {
+            if (jdbcTemplate.getDataSource() != null) {
                 Connection connection = jdbcTemplate.getDataSource().getConnection();
                 PreparedStatement preparedStatementFirst = connection.prepareStatement(query);
                 preparedStatementFirst.setLong(1, rs.getLong("first_and_expression_id"));
@@ -77,7 +81,7 @@ public class RuleRowMapper implements RowMapper<Rule> {
             }
         }
         if (rs.getObject("or_expression_id") != null && rs.getLong("or_expression_id") == expressionId) {
-            if (jdbcTemplate.getDataSource() != null ) {
+            if (jdbcTemplate.getDataSource() != null) {
                 Connection connection = jdbcTemplate.getDataSource().getConnection();
 
                 PreparedStatement preparedStatementFirst = connection.prepareStatement(query);

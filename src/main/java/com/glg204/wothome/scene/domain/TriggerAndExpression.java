@@ -32,7 +32,9 @@ public class TriggerAndExpression extends TriggerExpression{
     }
 
     @Override
-    public void process() {
-
+    public boolean process() {
+        boolean firstResult = firstExpression.process();
+        boolean secondResult = secondExpression.process();
+        return firstResult && secondResult;
     }
 }

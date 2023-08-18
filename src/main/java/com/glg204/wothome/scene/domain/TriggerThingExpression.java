@@ -1,6 +1,9 @@
 package com.glg204.wothome.scene.domain;
 
 import com.glg204.wothome.webofthings.domain.Thing;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.client.RestTemplate;
 
 public class TriggerThingExpression extends TriggerExpression {
 
@@ -9,6 +12,7 @@ public class TriggerThingExpression extends TriggerExpression {
     private String property;
 
     private String value;
+
 
     public TriggerThingExpression() {
     }
@@ -20,8 +24,20 @@ public class TriggerThingExpression extends TriggerExpression {
     }
 
     @Override
-    public void process() {
-
+    public boolean process() {
+        RestTemplate restTemplate = new RestTemplate();
+        String url = thing.getUrl() + "?property=" + property;
+        try {
+            ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
+            if (response.getStatusCode().is2xxSuccessful()) {
+                String responseBody = response.getBody();
+                return responseBody != null && responseBody.equals(value);
+            } else {
+                return false;
+            }
+        } catch (Exception e) {
+            return false;
+        }
     }
 
 

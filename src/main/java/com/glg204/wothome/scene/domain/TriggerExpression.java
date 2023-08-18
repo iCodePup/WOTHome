@@ -4,8 +4,6 @@ public abstract class TriggerExpression {
 
     private Long id;
 
-    public abstract void process();
-
     public Long getId() {
         return id;
     }
@@ -13,4 +11,6 @@ public abstract class TriggerExpression {
     public void setId(Long id) {
         this.id = id;
     }
+
+    public abstract boolean process();
 }

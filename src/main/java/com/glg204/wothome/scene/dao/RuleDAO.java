@@ -8,6 +8,8 @@ import java.util.List;
 
 public interface RuleDAO {
 
+    List<Rule> getRules();
+
     List<Rule> getRules(User currentUser);
 
     Rule getRuleById(User currentUser, Long id);
