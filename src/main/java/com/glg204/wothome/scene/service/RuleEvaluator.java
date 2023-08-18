@@ -46,15 +46,20 @@ public class RuleEvaluator {
 
     private void executeAction(Action action) {
         RestTemplate restTemplate = new RestTemplate();
-        String url = action.getThing().getUrl();
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        String requestBody = "{\"property\": \"" + action.getProperty() + "\", \"value\": \"" + action.getValue() + "\"}";
-        HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
-        ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.POST, httpEntity, String.class);
+        if (action != null && action.getThing() != null && action.getProperty() != null) {
+            String url = action.getThing().getUrl() + "/properties/" + action.getProperty();
+            HttpHeaders headers = new HttpHeaders();
+            headers.setContentType(MediaType.APPLICATION_JSON);
+            //EXEMPLE : {TemperatureProperty: 11}
+            String requestBody = "{" + action.getProperty() + ": " + action.getValue() + "}";
+            HttpEntity<String> httpEntity = new HttpEntity<>(requestBody, headers);
+            ResponseEntity<String> response = restTemplate.exchange(url, HttpMethod.PUT, httpEntity, String.class);
 
-        if (response.getStatusCode().is2xxSuccessful()) {
-            logger.info("L'action sur l'objet connecté a été executée");
+            if (response.getStatusCode().is2xxSuccessful()) {
+                logger.info("L'action sur l'objet connecté a été executée");
+            } else {
+                logger.info("Echec lors de l'execution de l'action sur l'objet connecté");
+            }
         } else {
             logger.info("Echec lors de l'execution de l'action sur l'objet connecté");
         }

@@ -34,7 +34,7 @@ public class RuleDAOImpl implements RuleDAO {
     private UserDAO userDAO;
 
     public List<Rule> getRules(User currentUser) {
-        String sql = "SELECT r.id AS rule_id, r.name, " +
+        String sql = "SELECT r.id AS rule_id,  r.enduserid, r.name, " +
                 "a.id AS action_id, a.thing_id as action_thing_id, a.property AS action_property, a.value AS action_value, " +
                 "te.id AS trigger_expression_id, " +
                 "ttae.id AS and_expression_id, ttae.first_expression_id AS first_and_expression_id, ttae.second_expression_id AS second_and_expression_id, " +
@@ -54,7 +54,7 @@ public class RuleDAOImpl implements RuleDAO {
     }
 
     public List<Rule> getRules() {
-        String sql = "SELECT r.id AS rule_id, r.name, " +
+        String sql = "SELECT r.id AS rule_id,  r.enduserid, r.name, " +
                 "a.id AS action_id, a.thing_id as action_thing_id, a.property AS action_property, a.value AS action_value, " +
                 "te.id AS trigger_expression_id, " +
                 "ttae.id AS and_expression_id, ttae.first_expression_id AS first_and_expression_id, ttae.second_expression_id AS second_and_expression_id, " +
@@ -73,7 +73,7 @@ public class RuleDAOImpl implements RuleDAO {
     }
 
     @Override
-    public Rule getRuleById(User currentUser, Long id) {
+    public Rule getRuleById(Long id) {
         String sql = "SELECT r.id AS rule_id, r.name, " +
                 "a.id AS action_id, a.thing_id as action_thing_id, a.property AS action_property, a.value AS action_value, " +
                 "te.id AS trigger_expression_id, " +
@@ -90,7 +90,7 @@ public class RuleDAOImpl implements RuleDAO {
                 "LEFT JOIN trigger_thing_expression tthe ON te.id = tthe.id " +
                 "WHERE r.id = ?";
 
-        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new RuleRowMapper(currentUser, thingDAO, jdbcTemplate));
+        return jdbcTemplate.queryForObject(sql, new Object[]{id}, new RuleRowMapper(userDAO, thingDAO, jdbcTemplate));
     }
 
 

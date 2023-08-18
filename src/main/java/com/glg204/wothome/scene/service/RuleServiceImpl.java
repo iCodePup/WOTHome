@@ -46,6 +46,6 @@ public class RuleServiceImpl implements RuleService {
     @Override
     public Optional<RuleDTO> getRuleById(Principal principal, Long id) {
         Optional<User> user = userDAO.getUserByEmail(principal.getName());
-        return user.map(currentUser -> ruleDTOMapper.toDTO(ruleDAO.getRuleById(currentUser,id)));
+        return user.map(currentUser -> ruleDTOMapper.toDTO(ruleDAO.getRuleById(id)));
     }
 }
