@@ -39,10 +39,18 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.POST, "/auth/login").anonymous()
                 .requestMatchers(HttpMethod.POST, "/user/create").anonymous()
                 .requestMatchers(HttpMethod.GET, "/auth/me").authenticated()
+                .requestMatchers(HttpMethod.GET, "/things").hasAuthority("ROLE_CLIENT")
                 .requestMatchers(HttpMethod.GET, "/user/**").hasAuthority("ROLE_CLIENT")
                 .requestMatchers(HttpMethod.POST, "/user/**").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.GET, "/houseplan/**").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.POST, "/houseplan/**").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.PUT, "/houseplan/**").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.DELETE, "/houseplan/**").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.GET, "/rule").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.GET, "/rule/**").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.POST, "/rule").hasAuthority("ROLE_CLIENT")
                 .requestMatchers("/", "/error", "/csrf", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
-                .anyRequest().permitAll(); //TODO...
+                .anyRequest().permitAll();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
         //http.exceptionHandling(e -> e.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)));
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
