@@ -8,7 +8,7 @@ CREATE TABLE enduser
 (
     id        SERIAL PRIMARY KEY,
     telephone VARCHAR(10),
-    address   VARCHAR(50)
+    address   VARCHAR(200)
 );
 
 create table wot_user
@@ -57,16 +57,16 @@ create table trigger_and_expression
 (
     first_expression_id  INT,
     second_expression_id INT
---     FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id), --TODO fix issue using FK
---     FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id) --TODO fix issue using FK
+--     FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id)  ON DELETE CASCADE,
+--     FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id)  ON DELETE CASCADE
 ) INHERITS (trigger_expression);
 
 create table trigger_or_expression
 (
     first_expression_id  INT,
     second_expression_id INT
---     FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id), --TODO fix issue using FK
---     FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id)  --TODO fix issue using FK
+--     FOREIGN KEY (first_expression_id) REFERENCES trigger_expression (id)  ON DELETE CASCADE,
+--     FOREIGN KEY (second_expression_id) REFERENCES trigger_expression (id)  ON DELETE CASCADE
 ) INHERITS (trigger_expression);
 
 
@@ -102,8 +102,8 @@ alter table rule
     add column actionid            INT NULL DEFAULT NULL,
     add column triggerexpressionid INT NULL DEFAULT NULL,
     add foreign key (enduserid) references enduser (id),
-    add foreign key (actionid) references action (id);
---     add foreign key (triggerexpressionid) references trigger_expression (id); --TODO fix issue using FK
+    add foreign key (actionid) references action (id) ON DELETE CASCADE;
+--     add foreign key (triggerexpressionid) references trigger_expression (id)  ON DELETE CASCADE;
 
 
 alter table enduser

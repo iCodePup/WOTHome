@@ -15,4 +15,6 @@ public interface RuleDAO {
     Rule getRuleById(Long id);
 
     Long save(Rule r);
+
+    boolean deleteById(Long id);
 }

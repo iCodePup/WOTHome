@@ -1,16 +1,14 @@
 package com.glg204.wothome.scene.service;
 
-import com.glg204.wothome.config.TokenProvider;
 import com.glg204.wothome.scene.dao.RuleDAO;
 import com.glg204.wothome.scene.domain.Action;
 import com.glg204.wothome.scene.domain.Rule;
 import com.glg204.wothome.scene.domain.TriggerExpression;
-import com.glg204.wothome.scene.dto.RuleDTO;
-import com.glg204.wothome.webofthings.dao.ThingDAO;
 import jakarta.annotation.PostConstruct;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.*;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -25,6 +23,12 @@ public class RuleEvaluator {
 
     @Autowired
     RuleDAO ruleDAO;
+
+    private final RestTemplate restTemplate;
+
+    public RuleEvaluator() {
+        this.restTemplate = new RestTemplate();
+    }
 
     @PostConstruct
     @Scheduled(fixedRate = 10000) // 10 seconds
@@ -45,7 +49,7 @@ public class RuleEvaluator {
     }
 
     private void executeAction(Action action) {
-        RestTemplate restTemplate = new RestTemplate();
+
         if (action != null && action.getThing() != null && action.getProperty() != null) {
             String url = action.getThing().getUrl() + "/properties/" + action.getProperty();
             HttpHeaders headers = new HttpHeaders();

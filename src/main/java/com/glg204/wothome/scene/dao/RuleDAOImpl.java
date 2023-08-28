@@ -122,6 +122,13 @@ public class RuleDAOImpl implements RuleDAO {
         return (long) -1;
     }
 
+    @Override
+    public boolean deleteById(Long id) {
+        String sql = "delete from rule where id = ?";
+        Object[] args = new Object[]{id};
+        return jdbcTemplate.update(sql, args) == 1;
+    }
+
     private Long saveTriggerExpression(TriggerExpression expression) {
         if (expression instanceof TriggerAndExpression) {
             return saveAndExpression((TriggerAndExpression) expression);

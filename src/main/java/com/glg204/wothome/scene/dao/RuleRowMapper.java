@@ -2,7 +2,6 @@ package com.glg204.wothome.scene.dao;
 
 import com.glg204.wothome.scene.domain.*;
 import com.glg204.wothome.user.dao.UserDAO;
-import com.glg204.wothome.user.domain.User;
 import com.glg204.wothome.webofthings.dao.ThingDAO;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.core.RowMapper;

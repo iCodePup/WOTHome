@@ -6,16 +6,13 @@ import com.glg204.wothome.house.dto.RoomWithThingsDTO;
 import com.glg204.wothome.house.service.HousePlanService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @RestController
 @RequestMapping("/houseplan")
@@ -39,7 +36,7 @@ public class HousePlanController {
     @PostMapping("/room")
     public ResponseEntity<String> addRoom(Principal principal, @Valid @RequestBody RoomDTO roomDTO) {
         if (housePlanService.addRoom(principal, roomDTO)) {
-            return ResponseEntity.ok("Pièce ajouté");
+            return ResponseEntity.ok("Pièce ajoutée");
         }
         return ResponseEntity.internalServerError().build();
     }
@@ -61,17 +58,21 @@ public class HousePlanController {
         }
     }
 
-    @ResponseStatus(HttpStatus.BAD_REQUEST)
-    @ExceptionHandler(MethodArgumentNotValidException.class)
-    public Map<String, String> handleValidationExceptions(
-            MethodArgumentNotValidException ex) {
-        Map<String, String> errors = new HashMap<>();
-        ex.getBindingResult().getAllErrors().forEach((error) -> {
-            String fieldName = ((FieldError) error).getField();
-            String errorMessage = error.getDefaultMessage();
-            errors.put(fieldName, errorMessage);
-        });
-        errors.put("message","Une erreur de validation est survenue");
-        return errors;
+    @ExceptionHandler({MethodArgumentNotValidException.class})
+    public ResponseEntity<Object> handleValidationExceptions(Exception ex) {
+        StringBuilder builder = new StringBuilder();
+
+        if (ex instanceof MethodArgumentNotValidException) {
+            MethodArgumentNotValidException validationException = (MethodArgumentNotValidException) ex;
+            validationException.getBindingResult().getAllErrors().forEach((error) -> {
+                String fieldName = ((FieldError) error).getField();
+                String errorMessage = error.getDefaultMessage();
+                builder.append(String.format("%s: %s ", fieldName, errorMessage));
+            });
+        }
+
+        String responseMessage = builder.toString().trim();
+        String jsonResponse = String.format("{\"message\": \"%s\"}", responseMessage);
+        return ResponseEntity.badRequest().body(jsonResponse);
     }
 }

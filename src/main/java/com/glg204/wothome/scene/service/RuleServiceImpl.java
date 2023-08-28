@@ -48,4 +48,9 @@ public class RuleServiceImpl implements RuleService {
         Optional<User> user = userDAO.getUserByEmail(principal.getName());
         return user.map(currentUser -> ruleDTOMapper.toDTO(ruleDAO.getRuleById(id)));
     }
+
+    @Override
+    public boolean delete(Long id) {
+        return ruleDAO.deleteById(id);
+    }
 }

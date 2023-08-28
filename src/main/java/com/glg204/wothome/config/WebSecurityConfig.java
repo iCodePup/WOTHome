@@ -49,6 +49,7 @@ public class WebSecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/rule").hasAuthority("ROLE_CLIENT")
                 .requestMatchers(HttpMethod.GET, "/rule/**").hasAuthority("ROLE_CLIENT")
                 .requestMatchers(HttpMethod.POST, "/rule").hasAuthority("ROLE_CLIENT")
+                .requestMatchers(HttpMethod.DELETE, "/rule").hasAuthority("ROLE_CLIENT")
                 .requestMatchers("/", "/error", "/csrf", "/swagger-ui.html", "/swagger-ui/**", "/v3/api-docs", "/v3/api-docs/**").permitAll()
                 .anyRequest().permitAll();
         http.addFilterBefore(tokenAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

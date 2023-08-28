@@ -23,7 +23,6 @@ public class ThingListener implements ServiceListener {
         this.jmDNS = jmDNS;
         this.thingDAO = thingDAO;
         logger.info("ThingListener loaded");
-
     }
 
     @Override
@@ -48,7 +47,7 @@ public class ThingListener implements ServiceListener {
 
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 
@@ -65,16 +64,15 @@ public class ThingListener implements ServiceListener {
 
                 thingDAO.setThingAlive(url, false);
                 logger.info("Service removed {}", url);
-            } else {//jmDNS lib bug...sometimes cant resolve getServiceInfo...
-                Optional<Thing> thing = thingDAO.getByName(serviceEvent.getName());
+            } else {// jmDNS lib bug...sometimes cant resolve getServiceInfo...=> fix with usage of IPV4 (java17)
+                Optional<Thing> thing = thingDAO.getByName(serviceEvent.getName()); //  !! name should be unique if the bug occur...
                 thing.ifPresent(value -> {
                     thingDAO.setThingAlive(value.getUrl(), false);
                     logger.info("- Service removed {}", value.getUrl());
                 });
-
             }
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
 

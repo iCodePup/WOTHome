@@ -14,4 +14,6 @@ public interface RuleService {
     List<RuleDTO> getRules(Principal principal);
 
     Optional<RuleDTO> getRuleById(Principal principal, Long id);
+
+    boolean delete(Long id);
 }

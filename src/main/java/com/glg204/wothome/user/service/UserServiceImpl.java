@@ -44,7 +44,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public Integer save(PasswordEncoder passwordEncoder, @Valid UserDTO userDTO) throws EmailAlreadyExistsException {
         if (wotUserService.existsByEmail(userDTO.getEmail())) {
-            throw new EmailAlreadyExistsException();
+            throw new EmailAlreadyExistsException("Adresse email déja utilisée");
         } else {
             WOTUser wotUser = wotUserService.save(passwordEncoder, userDTO);
             // Creates the corresponding user.

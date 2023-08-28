@@ -3,7 +3,7 @@ package com.glg204.wothome.scene.domain;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.glg204.wothome.webofthings.domain.Thing;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.web.client.RestTemplateBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.client.RestTemplate;
 
@@ -15,8 +15,10 @@ public class TriggerThingExpression extends TriggerExpression {
 
     private String value;
 
+    private RestTemplate restTemplate;
 
     public TriggerThingExpression() {
+        this.restTemplate = new RestTemplate();
     }
 
     public TriggerThingExpression(Thing thing, String property, String value) {
@@ -27,7 +29,6 @@ public class TriggerThingExpression extends TriggerExpression {
 
     @Override
     public boolean process() {
-        RestTemplate restTemplate = new RestTemplate();
         String url = thing.getUrl() + "/properties/" + property;
         try {
             ResponseEntity<String> response = restTemplate.getForEntity(url, String.class);
@@ -68,5 +69,9 @@ public class TriggerThingExpression extends TriggerExpression {
 
     public void setValue(String value) {
         this.value = value;
+    }
+
+    public void setRestTemplate(RestTemplate restTemplate) {
+        this.restTemplate = restTemplate;
     }
 }

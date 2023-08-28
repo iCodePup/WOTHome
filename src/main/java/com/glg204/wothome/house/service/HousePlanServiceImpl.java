@@ -92,10 +92,12 @@ public class HousePlanServiceImpl implements HousePlanService {
     private boolean addRoom(HousePlan housePlan, RoomDTO roomDTO) {
         Room room = roomDTOMapper.fromDTO(housePlan, roomDTO);
         Long roomId = roomDAO.save(room);
-        room.setId(roomId);
         boolean updated = roomId >= 0;
-        for (Long thingId : roomDTO.getThingsId()) {
-            updated &= thingDAO.setThingRoom(thingId, room.getId());
+        if (room != null) {
+            room.setId(roomId);
+            for (Long thingId : roomDTO.getThingsId()) {
+                updated &= thingDAO.setThingRoom(thingId, room.getId());
+            }
         }
         return updated;
     }
@@ -104,7 +106,9 @@ public class HousePlanServiceImpl implements HousePlanService {
         Room room = roomDTOMapper.fromDTO(housePlan, roomDTO);
         boolean updated = roomDAO.update(room);
         for (Long thingId : roomDTO.getThingsId()) {
-            updated &= thingDAO.setThingRoom(thingId, room.getId());
+            if (room != null) {
+                updated &= thingDAO.setThingRoom(thingId, room.getId());
+            }
         }
         return updated;
     }

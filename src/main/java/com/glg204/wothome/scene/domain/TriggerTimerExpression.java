@@ -8,22 +8,30 @@ public class TriggerTimerExpression extends TriggerExpression {
 
     private Instant runtime;
 
+    private LocalDateTime currentDateTime;
+
     public TriggerTimerExpression(Instant runtime) {
         this.runtime = runtime;
+        currentDateTime = LocalDateTime.now();
     }
 
     public Instant getRuntime() {
         return runtime;
     }
 
+    @Override
+    public boolean process() {
+
+        LocalDateTime runtimeDateTime = runtime.atOffset(ZoneOffset.UTC).toLocalDateTime();
+        return currentDateTime.equals(runtimeDateTime);
+    }
+
     public void setRuntime(Instant runtime) {
         this.runtime = runtime;
     }
 
-    @Override
-    public boolean process() {
-        LocalDateTime currentDateTime = LocalDateTime.now();
-        LocalDateTime runtimeDateTime = runtime.atOffset(ZoneOffset.UTC).toLocalDateTime();
-        return currentDateTime.equals(runtimeDateTime);
+    public void setCurrentDateTime(LocalDateTime currentDateTime) {
+        this.currentDateTime = currentDateTime;
     }
+
 }
