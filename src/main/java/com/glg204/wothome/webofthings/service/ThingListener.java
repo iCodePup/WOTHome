@@ -39,7 +39,8 @@ public class ThingListener implements ServiceListener {
 
                 Optional<Thing> thing = thingDAO.getByURL(url);
                 if (thing.isPresent()) {
-                    thingDAO.setThingAlive(url, true);
+
+                    thingDAO.setThingAlive(name, url, true);
                 } else {
                     thingDAO.save(new Thing(name, url, true));
                 }
@@ -61,13 +62,13 @@ public class ThingListener implements ServiceListener {
                                 info.getHostAddresses()[0],
                                 info.getPort()
                         );
-
-                thingDAO.setThingAlive(url, false);
+                String name = serviceEvent.getName();
+                thingDAO.setThingAlive(name, url, false);
                 logger.info("Service removed {}", url);
             } else {// jmDNS lib bug...sometimes cant resolve getServiceInfo...=> fix with usage of IPV4 (java17)
                 Optional<Thing> thing = thingDAO.getByName(serviceEvent.getName()); //  !! name should be unique if the bug occur...
                 thing.ifPresent(value -> {
-                    thingDAO.setThingAlive(value.getUrl(), false);
+                    thingDAO.setThingAlive(serviceEvent.getName(), value.getUrl(), false);
                     logger.info("- Service removed {}", value.getUrl());
                 });
             }

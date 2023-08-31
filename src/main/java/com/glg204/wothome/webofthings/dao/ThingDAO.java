@@ -17,7 +17,7 @@ public interface ThingDAO {
 
     Optional<Thing> getById(Long id);
 
-    boolean setThingAlive(String url, boolean b);
+    boolean setThingAlive(String name, String url, boolean b);
 
     void save(Thing thing);
 

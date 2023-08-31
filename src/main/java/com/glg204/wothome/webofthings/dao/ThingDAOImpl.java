@@ -125,9 +125,9 @@ public class ThingDAOImpl implements ThingDAO {
     }
 
     @Override
-    public boolean setThingAlive(String url, boolean alive) {
-        String sql = "UPDATE thing SET alive = ? WHERE url = ?";
-        Object[] args = new Object[]{alive, url};
+    public boolean setThingAlive(String name, String url, boolean alive) {
+        String sql = "UPDATE thing SET name = ?, alive = ? WHERE url = ?";
+        Object[] args = new Object[]{name, alive, url};
         return jdbcTemplate.update(sql, args) == 1;
     }
 
