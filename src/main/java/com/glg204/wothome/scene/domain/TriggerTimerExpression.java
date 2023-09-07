@@ -15,15 +15,14 @@ public class TriggerTimerExpression extends TriggerExpression {
         currentDateTime = LocalDateTime.now();
     }
 
-    public Instant getRuntime() {
-        return runtime;
-    }
-
     @Override
     public boolean process() {
-
         LocalDateTime runtimeDateTime = runtime.atOffset(ZoneOffset.UTC).toLocalDateTime();
         return currentDateTime.equals(runtimeDateTime);
+    }
+
+    public Instant getRuntime() {
+        return runtime;
     }
 
     public void setRuntime(Instant runtime) {

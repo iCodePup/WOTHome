@@ -36,8 +36,8 @@ public class TriggerThingExpression extends TriggerExpression {
                 String responseBody = response.getBody();
                 ObjectMapper objectMapper = new ObjectMapper();
                 JsonNode jsonNode = objectMapper.readTree(responseBody);
-                String temperatureValue = jsonNode.get(this.property).asText();
-                return temperatureValue != null && temperatureValue.equalsIgnoreCase(value);
+                String responseValue = jsonNode.get(this.property).asText();
+                return responseValue != null && responseValue.equalsIgnoreCase(value);
             } else {
                 return false;
             }
