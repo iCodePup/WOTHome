@@ -37,7 +37,7 @@ create table houseplan
 create table room
 (
     id      SERIAL PRIMARY KEY,
-    name    VARCHAR(100) NOT NULL unique,
+    name    VARCHAR(100) NOT NULL,
     surface DECIMAL      NOT NULL
 );
 
